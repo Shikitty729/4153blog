@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Blog Management System</h1>
+    <!-- Create Blog Post -->
+    <div id="create-blog" class="card p-4 mb-5">
+        <h3>Create a Blog Post</h3>
+        <div class="mb-3">
+            <label for="blogTitle" class="form-label">Title</label>
+            <input type="text" id="blogTitle" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="blogContent" class="form-label">Content</label>
+            <textarea id="blogContent" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="blogWriterUni" class="form-label">Writer UNI</label>
+            <input type="text" id="blogWriterUni" class="form-control">
+        </div>
+        <button onclick="createBlog()" class="btn btn-primary">Create Blog</button>
+    </div>
+
+    <!-- Edit Blog Post -->
+    <div id="edit-blog" class="card p-4 mb-5">
+        <h3>Edit a Blog Post</h3>
+        <div class="mb-3">
+            <label for="editBlogNumber" class="form-label">Blog ID</label>
+            <input type="number" id="editBlogNumber" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="editBlogTitle" class="form-label">New Title</label>
+            <input type="text" id="editBlogTitle" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="editBlogContent" class="form-label">New Content</label>
+            <textarea id="editBlogContent" class="form-control" rows="4"></textarea>
+        </div>
+        <button onclick="editBlog()" class="btn btn-warning">Edit Blog</button>
+    </div>
+
+    <!-- Delete Blog Post -->
+    <div id="delete-blog" class="card p-4 mb-5">
+        <h3>Delete a Blog Post</h3>
+        <div class="mb-3">
+            <label for="deleteBlogNumber" class="form-label">Blog ID</label>
+            <input type="number" id="deleteBlogNumber" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="deleteWriterUni" class="form-label">Writer UNI</label>
+            <input type="text" id="deleteWriterUni" class="form-control">
+        </div>
+        <button onclick="deleteBlog()" class="btn btn-danger">Delete Blog</button>
+    </div>
+
+    <!-- View Blogs Ordered by Priority -->
+    <div id="view-blogs" class="card p-4 mb-5">
+        <h3>View Blogs Ordered by Priority</h3>
+        <button onclick="fetchBlogs()" class="btn btn-secondary mb-3">Fetch Blogs</button>
+        <ul id="blogList" class="list-group"></ul>
+    </div>
+
+    <!-- Search Blog by Keyword -->
+    <div id="search-blog" class="card p-4 mb-5">
+        <h3>Search Blog by Keyword</h3>
+        <div class="mb-3">
+            <label for="searchKeyword" class="form-label">Keyword</label>
+            <input type="text" id="searchKeyword" class="form-control">
+        </div>
+        <button onclick="searchBlog()" class="btn btn-info">Search Blog</button>
+        <ul id="searchResults" class="list-group mt-3"></ul>
+    </div>
+</div>
+
+<script>
+    const apiBaseUrl = 'http://127.0.0.1:8000/blog';
+
+    function createBlog() {
+        const title = document.getElementById('blogTitle').value;
+        const content = document.getElementById('blogContent').value;
+        const writerUni = document.getElementById('blogWriterUni').value;
+
+        axios.post(`${apiBaseUrl}/create_blog/`, {
+            title: title,
+            content: content,
+            writer_uni: writerUni
+        })
+        .then(response => {
+            alert(response.data.message);
+            clearCreateForm();
+        })
+        .catch(error => {
+            alert('Failed to create blog: ' + (error.response ? error.response.data.error : error.message));
+        });
+    }
+
+    function editBlog() {
+        const blogNumber = document.getElementById('editBlogNumber').value;
+        const newTitle = document.getElementById('editBlogTitle').value;
+        const newContent = document.getElementById('editBlogContent').value;
+
+        axios.put(`${apiBaseUrl}/edit_blog/`, {
+            blog_number: blogNumber,
+            new_title: newTitle,
+            new_content: newContent
+        })
+        .then(response => {
+            alert(response.data.message);
+        })
+        .catch(error => {
+            alert('Failed to edit blog: ' + (error.response ? error.response.data.error : error.message));
+        });
+    }
+
+    function deleteBlog() {
+        const blogNumber = document.getElementById('deleteBlogNumber').value;
+        const writerUni = document.getElementById('deleteWriterUni').value;
+
+        axios.delete(`${apiBaseUrl}/delete_blog/`, {
+            data: {
+                blog_number: blogNumber,
+                student_uni: writerUni
+            }
+        })
+        .then(response => {
+            alert(response.data.message);
+        })
+        .catch(error => {
+            alert('Failed to delete blog: ' + (error.response ? error.response.data.error : error.message));
+        });
+    }
+
+    function fetchBlogs() {
+        axios.get(`${apiBaseUrl}/query_blog_by_priority/`)
+        .then(response => {
+            const blogs = response.data.blogs;
+            const blogList = document.getElementById('blogList');
+            blogList.innerHTML = '';
+            blogs.forEach(blog => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item');
+                listItem.innerHTML = `<h5>${blog.title}</h5><p>${blog.content}</p><small>Written by: ${blog.writer_uni}</small>`;
+                blogList.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            alert('Failed to fetch blogs: ' + (error.response ? error.response.data.error : error.message));
+        });
+    }
+
+    function searchBlog() {
+        const keyword = document.getElementById('searchKeyword').value;
+
+        axios.post(`${apiBaseUrl}/search_blog/`, {
+            keyword: keyword
+        })
+        .then(response => {
+            const blogs = response.data.blogs;
+            const searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = '';
+            blogs.forEach(blog => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item');
+                listItem.innerHTML = `<h5>${blog.title}</h5><p>${blog.content}</p><small>Written by: ${blog.writer_uni}</small>`;
+                searchResults.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            alert('Failed to search blog: ' + (error.response ? error.response.data.error : error.message));
+        });
+    }
+
+    function clearCreateForm() {
+        document.getElementById('blogTitle').value = '';
+        document.getElementById('blogContent').value = '';
+        document.getElementById('blogWriterUni').value = '';
+    }
+</script>
+
+</body>
+</html>
