@@ -4,7 +4,7 @@ This microservice handles user posts for the Columbia Forum project.
 
 ## Usage
 
-To connect with remote MySQL server, create a `my.cnf` file in the root directory, which should look like:
+To connect with our remote MySQL server on AWS, create a `my.cnf` file in the root directory, which should look like:
 
 ```
 [client]
@@ -15,5 +15,44 @@ host=remote_server_ip          # The IP address or hostname of the remote MySQL 
 port=3306    
 ```
 
-Run command:
+Run the Django project using:
 `python manage.py runserver`
+
+To sync with the database after updating data models in `models.py`, run
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+
+## API Endpoints
+
+### Create Post
+
+- **Endpoint**: `/posts/`
+- **Method**: `POST`
+- **Description**: Creates a new post with the provided title and content.
+- **Request Body**:
+    - `title` (string): The title of the post.
+    - `content` (string): The content of the post.
+
+
+### Get Post
+
+- **Endpoint**: `/posts/<int:pid>/`
+- **Method**: `GET`
+
+
+### Put Post
+
+- **Endpoint**: `/posts/<int:pid>/`
+- **Method**: `PUT`
+- **Request Body**:
+    - `title` (string): The title of the post.
+    - `content` (string): The content of the post.
+
+
+### Delete Post
+
+- **Endpoint**: `/posts/<int:pid>/`
+- **Method**: `DELETE`
