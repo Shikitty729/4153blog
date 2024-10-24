@@ -1,6 +1,7 @@
 from django.db import models
 
 # Create your models here.
+# todo: enhance this model later
 
 class Post(models.Model):
     pid = models.AutoField(primary_key=True)
