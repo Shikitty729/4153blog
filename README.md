@@ -25,6 +25,11 @@ python manage.py migrate
 ```
 
 
+## Deployment
+
+The service is deployed using Google Cloud Run here.
+
+
 ## API Endpoints
 
 ### Create Post
@@ -40,6 +45,11 @@ python manage.py migrate
 ### Get Post
 
 - **Endpoint**: `/posts/<int:pid>/`
+- **Method**: `GET`
+
+### Get All Posts
+
+- **Endpoint**: `/all_posts/`
 - **Method**: `GET`
 
 
