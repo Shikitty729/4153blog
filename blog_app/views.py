@@ -12,3 +12,7 @@ class PostBlogPost(generics.CreateAPIView):
 class GetUpdateDeletePost(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+class GetAllPosts(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
