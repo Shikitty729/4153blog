@@ -26,7 +26,8 @@ SECRET_KEY = "django-insecure-y*r6o&y3jfv@#fl^+f13j42da96acrz6xc9sm1tvxj+$6106%y
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "post-service-image-2-745799261495.us-east4.run.app"
+    "localhost",
+    "post-service-image-2-745799261495.us-east4.run.app",
 ]
 
 
@@ -39,8 +40,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'blog_app',  # 注册新的应用
+    # my apps
+    'blog_app',
     'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -138,5 +141,16 @@ REST_FRAMEWORK = {
     # todo: try to incorporate this later
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# for django-specular
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'User Post Service API',
+    'DESCRIPTION': 'This service exposes a set of APIs that handles and interacts with user created posts.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
 }

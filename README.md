@@ -32,6 +32,8 @@ The service is deployed using Google Cloud Run here.
 
 ## API Endpoints
 
+Please see the OpenAPI documentation by visiting `/api/docs`.
+
 ### Create Post
 
 - **Endpoint**: `/posts/`
