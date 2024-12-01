@@ -1,10 +1,10 @@
-# Posts Microservice
+# User Post Microservice
 
-This microservice handles user posts for the Columbia Forum project.
+This microservice handles user posts (textual data) for the Columbia Online Social Platform project.
 
 ## Usage
 
-To connect with our remote MySQL server on AWS, create a `my.cnf` file in the root directory, which should look like:
+To connect with a remote MySQL server on AWS, create a `my.cnf` file in the root directory, which should look like:
 
 ```
 [client]
@@ -15,8 +15,8 @@ host=remote_server_ip          # The IP address or hostname of the remote MySQL 
 port=3306    
 ```
 
-Run the Django project using:
-`python manage.py runserver`
+Start the server using:
+`python manage.py runserver [PORT]`
 
 To sync with the database after updating data models in `models.py`, run
 ```
@@ -27,12 +27,20 @@ python manage.py migrate
 
 ## Deployment
 
-The service is deployed using Google Cloud Run here.
+The service is deployed directly to a Google Cloud VM instance.
+
+The URL address is (this might change after restarting the instance)
+
+```
+
+```
 
 
 ## API Endpoints
 
-Please see the OpenAPI documentation by visiting `/api/docs`.
+Please see the OpenAPI documentation by visiting the `{BASE_URL}/api/docs` endpoint.
+
+![alt text](image.png)
 
 ### Create Post
 
@@ -42,6 +50,7 @@ Please see the OpenAPI documentation by visiting `/api/docs`.
 - **Request Body**:
     - `title` (string): The title of the post.
     - `content` (string): The content of the post.
+    - `image_object_name` (string): The object name stored in the S3 bucket.
 
 
 ### Get Post
@@ -62,7 +71,7 @@ Please see the OpenAPI documentation by visiting `/api/docs`.
 - **Request Body**:
     - `title` (string): The title of the post.
     - `content` (string): The content of the post.
-
+    - `image_object_name` (string): The object name stored in the S3 bucket.
 
 ### Delete Post
 
