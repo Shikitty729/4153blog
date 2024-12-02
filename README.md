@@ -27,12 +27,18 @@ python manage.py migrate
 
 ## Deployment
 
-The service is deployed directly to a Google Cloud VM instance.
+The service is deployed directly to an AWS EC2 instance.
+
+Steps to take on the VM instance:
+1. Add instance IP to `ALLOWED_HOSTS` in `settings.py`
+2. Run `pip install -r requirements.txt` to install all dependencies
+3. Copy over the `my.cnf` credentials
+4. Start the server: `gunicorn blog4153.wsgi --bind 0.0.0.0:8000`
 
 The URL address is (this might change after restarting the instance)
 
 ```
-
+http://184.72.105.29:8000
 ```
 
 
